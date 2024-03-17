@@ -1,16 +1,39 @@
 import { useState } from "react";
 
 function App() {
+  const [allDevices, setNewDevice] = useState([
+    { name: "iphone" },
+    { name: "sumsang" },
+    { name: "windows" },
+    { name: "mac" },
+  ]);
 
-  const [allDevices, setNewDevice] = useState(["iphone", "sumsang", "windows", "mac"]);
+  function deleteItem(e) {
 
-  const list = allDevices.map((device, i) => {
-    return <li key={i}>{device}</li>;
+    let itemId = e.target.id.slice(-1);
+
+    let arr = [...allDevices];
+
+    arr[itemId].name = '';
+
+    setNewDevice(arr);
+  }
+
+  const list = allDevices.map((device,i) => {
+    if(device.name === ''){return ""}
+    return (
+      <li key={i}>
+        {device.name}{" "}
+        <button id={`dBtn${i}`} onClick={deleteItem}>
+          X
+        </button>
+      </li>
+    );
   });
 
   function addDevice(e) {
     e.preventDefault();
-    setNewDevice([...allDevices, e.target[0].value]);
+    setNewDevice([...allDevices, { name: e.target[0].value }]);
   }
 
   return (
