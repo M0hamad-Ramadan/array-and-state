@@ -1,48 +1,55 @@
 import { useState } from "react";
 
+let nextId = 5;
 function App() {
-  const [allDevices, setNewDevice] = useState([
-    { name: "iphone" },
-    { name: "sumsang" },
-    { name: "windows" },
-    { name: "mac" },
+  const [newDevice, setNewDevice] = useState("");
+  const [allDevices, setNewDevices] = useState([
+    { id: "1", name: "iphone" },
+    { id: "2", name: "sumsang" },
+    { id: "3", name: "windows" },
+    { id: "4", name: "mac" },
   ]);
 
-  function deleteItem(e) {
-
-    let itemId = e.target.id.slice(-1);
-
-    let arr = [...allDevices];
-
-    arr[itemId].name = '';
-
-    setNewDevice(arr);
+  function addDevice() {
+    setNewDevices([...allDevices, { id: nextId, name: newDevice }]);
+    nextId = nextId + 1;
   }
 
-  const list = allDevices.map((device,i) => {
-    if(device.name === ''){return ""}
+  function deleteDevice(deviceId) {
+    
+    let newDevices =allDevices.filter((device)=>{
+      return device.id !== deviceId;
+    });
+    
+    setNewDevices(newDevices);
+  }
+
+  const list = allDevices.map((device) => {
     return (
-      <li key={i}>
+      <li key={device.id}>
         {device.name}{" "}
-        <button id={`dBtn${i}`} onClick={deleteItem}>
+        <button
+          onClick={() => {
+            deleteDevice(device.id);
+          }}>
           X
         </button>
       </li>
     );
   });
 
-  function addDevice(e) {
-    e.preventDefault();
-    setNewDevice([...allDevices, { name: e.target[0].value }]);
-  }
-
   return (
     <div className="App">
       <ul> {list} </ul>
-      <form onSubmit={addDevice}>
-        <input placeholder="device name....." />
-        <button>add</button>
-      </form>
+
+      <input
+        placeholder="device name....."
+        value={newDevice}
+        onChange={(e) => {
+          setNewDevice(e.target.value);
+        }}
+      />
+      <button onClick={addDevice}>add</button>
     </div>
   );
 }
